@@ -136,7 +136,7 @@ get_ARM_FGA = function(facets_rdata, arm_position, method = 'em', include_loh = 
   altered_arm = altered_arm[which(!is.na(altered_arm))]
   if(length(altered_arm) > 0) {
     output = data.frame('SAMPLE_ID' = sample_name, 'altered_arm' = altered_arm,
-                        'altered_arm_cf' = c(as.numeric(cf_gain[which(gain > calls_threshold)]), as.numeric(cf_loss[which(loss > calls_threshold)])), 'purity' = fit$purity)
+                        'altered_arm_cf' = c(as.numeric(cf_gain[which(gain > calls_threshold)]), as.numeric(cf_loss[which(loss > calls_threshold)])), 'purity' = as.numeric(fit$purity))
     output$altered_arm_ccf = output$altered_arm_cf/output$purity
     return(output)
   } 
