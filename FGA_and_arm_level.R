@@ -70,7 +70,7 @@ get_FGA = function(facets_rdata, out = NULL, sampleID = NULL, method = 'em', inc
 }
 
 # function to compute FGA by chromosomal arm # need arm_position.Rdata 
-get_ARM_FGA = function(facets_rdata, out, arm_position, method = 'em', include_loh = F, calls_threshold = 0.8) {
+get_ARM_FGA = function(facets_rdata, arm_position, method = 'em', include_loh = F, calls_threshold = 0.8) {
   load(facets_rdata)
   require(data.table)
   sample_name = as.character(out$IGV[1,1])
@@ -120,8 +120,27 @@ get_ARM_FGA = function(facets_rdata, out, arm_position, method = 'em', include_l
       }
     }
   }
-  output = data.frame('SAMPLE_ID' = sample_name, 'altered_arm' = c(paste0(arm_position$arm[which(gain > calls_threshold)], '_gain'),   paste0(arm_position$arm[which(loss > calls_threshold)], '_loss')),
-                      'altered_arm_cf' = c(as.numeric(cf_gain[which(gain > calls_threshold)]), as.numeric(cf_loss[which(loss > calls_threshold)])), 'purity' = fit$purity)
-  output$altered_arm_ccf = output$altered_arm_cf/output$purity
-  return(output)
+  
+  altered_gain = if(sum(gain > calls_threshold) == 0) {
+    NA
+  } else {
+    paste0(arm_position$arm[which(gain > calls_threshold)], '_gain')
+  }
+  
+  altered_loss = if(sum(loss > calls_threshold) == 0) {
+    NA
+  } else {
+    paste0(arm_position$arm[which(loss > calls_threshold)], '_loss')
+  }
+  altered_arm = c(altered_gain, altered_loss)
+  altered_arm = altered_arm[which(!is.na(altered_arm))]
+  if(length(altered_arm) == 0) {
+    print(paste0('no arm level alterations for ', sample_name))
+  } else {
+    output = data.frame('SAMPLE_ID' = sample_name, 'altered_arm' = altered_arm,
+                        'altered_arm_cf' = c(as.numeric(cf_gain[which(gain > calls_threshold)]), as.numeric(cf_loss[which(loss > calls_threshold)])), 'purity' = fit$purity)
+    output$altered_arm_ccf = output$altered_arm_cf/output$purity
+    return(output)
+    
+  }
 }
