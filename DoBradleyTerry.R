@@ -19,8 +19,8 @@ DoBradleyTerry = function(mat) {
   for(i in 1:length(uniq_sampleID)) {
     tmp = mat[mat$SAMPLE_ID %in% uniq_sampleID[i],]
     tmp = tmp[order(tmp$is_clonal, decreasing = T),]
-    tmp = tmp[!duplicated(tmp$Alteration),]                             # keep only the clonal event in case there is two concomitent alteration
-    if(nrow(tmp) > 1) {                                                 # discard sample that have only >1 sample alteration
+    tmp = tmp[!duplicated(tmp$Alteration),]                             # keep only the clonal event in case there are two concomitent alterations
+    if(nrow(tmp) > 1) {                                                 # discard samples that have only 1 alteration
       sample_kept[i] = T
       tmp = tmp[sample(nrow(tmp)),]
       clonal_alt = tmp$Alteration[tmp$is_clonal]
