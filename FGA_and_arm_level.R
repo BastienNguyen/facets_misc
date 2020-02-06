@@ -70,7 +70,7 @@ get_FGA = function(facets_rdata, out = NULL, sampleID = NULL, method = 'em', inc
 }
 
 # function to compute FGA by chromosomal arm # need arm_position.Rdata 
-get_ARM_FGA = function(facets_rdata, arm_position, method = 'em', include_loh = F, calls_threshold = 0.8) {
+get_ARM_FGA = function(facets_rdata, arm_position, method = 'em', include_loh = F, calls_threshold = 0.9) {
   load(facets_rdata)
   require(data.table)
   sample_name = as.character(out$IGV[1,1])
